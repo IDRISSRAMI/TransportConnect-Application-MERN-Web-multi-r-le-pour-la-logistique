@@ -1,41 +1,145 @@
-import api from './api'
+import api from "./api"
 
-export const createEvaluation = async (evaluationData) => {
-  const response = await api.post('/evaluations', evaluationData)
-  return response.data
-}
+export const evaluationService = {
+  // Obtenir les évaluations reçues
+  async getEvaluationsRecues() {
+    try {
+      const response = await api.get("/evaluations/recues")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getEvaluationsByUser = async (userId) => {
-  const response = await api.get(`/evaluations/user/${userId}`)
-  return response.data
-}
+  // Obtenir les évaluations données
+  async getMesEvaluations() {
+    try {
+      const response = await api.get("/evaluations/donnees")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getAverageRating = async (userId) => {
-  const response = await api.get(`/evaluations/average/${userId}`)
-  return response.data
-}
+  // Créer une nouvelle évaluation
+  async createEvaluation(evaluationData) {
+    try {
+      const response = await api.post("/evaluations", evaluationData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const updateEvaluation = async (evaluationId, evaluationData) => {
-  const response = await api.put(`/evaluations/${evaluationId}`, evaluationData)
-  return response.data
-}
+  // Obtenir une évaluation par ID
+  async getEvaluationById(evaluationId) {
+    try {
+      const response = await api.get(`/evaluations/${evaluationId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const deleteEvaluation = async (evaluationId) => {
-  const response = await api.delete(`/evaluations/${evaluationId}`)
-  return response.data
-}
+  // Mettre à jour une évaluation
+  async updateEvaluation(evaluationId, evaluationData) {
+    try {
+      const response = await api.put(`/evaluations/${evaluationId}`, evaluationData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getAllEvaluations = async () => {
-  const response = await api.get('/evaluations')
-  return response.data
-}
+  // Supprimer une évaluation
+  async deleteEvaluation(evaluationId) {
+    try {
+      const response = await api.delete(`/evaluations/${evaluationId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getEvaluationsRecues = async () => {
-  const response = await api.get('/evaluations/recues')
-  return response.data
-}
+  // Obtenir les évaluations d'un utilisateur
+  async getUserEvaluations(userId) {
+    try {
+      const response = await api.get(`/evaluations/user/${userId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getEvaluationsDonnees = async () => {
-  const response = await api.get('/evaluations/donnees')
-  return response.data
+  // Obtenir les statistiques d'évaluation d'un utilisateur
+  async getUserEvaluationStats(userId) {
+    try {
+      const response = await api.get(`/evaluations/user/${userId}/stats`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Vérifier si une évaluation peut être donnée
+  async canEvaluate(trajetId, userId) {
+    try {
+      const response = await api.get(`/evaluations/can-evaluate/${trajetId}/${userId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Obtenir les évaluations en attente
+  async getPendingEvaluations() {
+    try {
+      const response = await api.get("/evaluations/pending")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Signaler une évaluation inappropriée
+  async reportEvaluation(evaluationId, reason) {
+    try {
+      const response = await api.post(`/evaluations/${evaluationId}/report`, {
+        reason,
+      })
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Obtenir les statistiques globales des évaluations (admin)
+  async getGlobalEvaluationStats() {
+    try {
+      const response = await api.get("/evaluations/stats")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Récupère les demandes à évaluer par l'utilisateur connecté
+  async getDemandesAevaluer() {
+    try {
+      const response = await api.get('/evaluations/a-evaluer')
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Récupère la note moyenne pour un utilisateur
+  async getAverageRating(userId) {
+    try {
+      const response = await api.get(`/evaluations/moyenne/${userId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 }

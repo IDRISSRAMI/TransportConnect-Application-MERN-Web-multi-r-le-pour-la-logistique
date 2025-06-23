@@ -1,26 +1,58 @@
-import api from './api'
+import api from "./api"
 
-export const register = async (userData) => {
-  const response = await api.post('/auth/register', userData)
-  return response.data
-}
+export const authService = {
 
-export const login = async (credentials) => {
-  const response = await api.post('/auth/login', credentials)
-  return response.data
-}
+  async login(credentials) {
+    try {
+      const response = await api.post("/auth/login", credentials)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const logout = async () => {
-  const response = await api.post('/auth/logout')
-  return response.data
-}
+  async register(userData) {
+    try {
+      const response = await api.post("/auth/register", userData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const getCurrentUser = async () => {
-  const response = await api.get('/auth/me')
-  return response.data
-}
+  async getCurrentUser() {
+    try {
+      const response = await api.get("/auth/me")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const updateProfile = async (userData) => {
-  const response = await api.put('/users/update', userData)
-  return response.data
+  async updateProfile(profileData) {
+    try {
+      const response = await api.put("/auth/profile", profileData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async changePassword(passwordData) {
+    try {
+      const response = await api.put("/auth/change-password", passwordData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+  async logout() {
+    try {
+      await api.post("/auth/logout")
+      localStorage.removeItem("token")
+    } catch (error) {
+      localStorage.removeItem("token")
+      throw error
+    }
+  }
 }

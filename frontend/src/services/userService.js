@@ -1,36 +1,104 @@
-import api from './api'
+import api from "./api"
 
-export const getAllUsers = async () => {
-  const response = await api.get('/users')
-  return response.data
-}
+export const userService = {
+  async getAllUsers(filters = {}) {
+    try {
+      const params = new URLSearchParams()
+      Object.keys(filters).forEach((key) => {
+        if (filters[key]) {
+          params.append(key, filters[key])
+        }
+      })
 
-export const updateUser = async (userData) => {
-  const response = await api.put('/users/update', userData)
-  return response.data
-}
+      const response = await api.get(`/users?${params.toString()}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const updateUserById = async (id, userData) => {
-  const response = await api.put(`/users/${id}`, userData)
-  return response.data
-}
+  async getUserById(userId) {
+    try {
+      const response = await api.get(`/users/${userId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const deleteUser = async (id) => {
-  const response = await api.delete(`/users/${id}`)
-  return response.data
-}
+  async updateUser(userId, userData) {
+    try {
+      const response = await api.put(`/users/${userId}`, userData)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const setVerifiedBadge = async (id) => {
-  const response = await api.put(`/users/${id}/verify`)
-  return response.data
-}
+ 
+  async toggleUserStatus(userId, action) {
+    try {
+      const response = await api.post(`/users/${userId}/toggle-status`, {
+        action, 
+      })
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+  async verifyUser(userId) {
+    try {
+      const response = await api.post(`/users/${userId}/verify`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const suspendUser = async (id) => {
-  const response = await api.put(`/users/${id}/suspend`)
-  return response.data
-}
+  async deleteUser(userId) {
+    try {
+      const response = await api.delete(`/users/${userId}`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const activateUser = async (id) => {
-  const response = await api.put(`/users/${id}/activate`)
-  return response.data
+  async getUserStats() {
+    try {
+      const response = await api.get("/users/stats")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async searchUsers(searchParams) {
+    try {
+      const response = await api.post("/users/search", searchParams)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async getUserHistory(userId) {
+    try {
+      const response = await api.get(`/users/${userId}/history`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+
+  async sendMessageToUser(userId, message) {
+    try {
+      const response = await api.post(`/users/${userId}/message`, {
+        message,
+      })
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 }

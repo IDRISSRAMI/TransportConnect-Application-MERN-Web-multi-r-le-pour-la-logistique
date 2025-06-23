@@ -1,11 +1,38 @@
-import api from './api'
+import api from "./api"
 
-export const getNotifications = async () => {
-  const response = await api.get('/notifications')
-  return response.data
-}
+export const notificationService = {
+  async getNotifications() {
+    try {
+      const response = await api.get("/notifications")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+  
+  async createNotification(data) {
+    try {
+      const response = await api.post("/notifications", data)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-export const markAsRead = async (notificationId) => {
-  const response = await api.put(`/notifications/${notificationId}/read`)
-  return response.data
+  async getNotificationSettings() {
+    try {
+      const response = await api.get("/notifications/settings")
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
+  async sendPushNotification(data) {
+    try {
+      const response = await api.post("/notifications/push", data)
+      return response
+    } catch (error) {
+      throw error
+    }
+  }
 }

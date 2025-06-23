@@ -1,54 +1,146 @@
-import { Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Profile from './pages/Profile'
-import TrajetsDisponibles from './pages/TrajetsDisponibles'
-import MesDemandes from './pages/MesDemandes'
-import MesTrajets from './pages/MesTrajets'
-import Evaluations from './pages/Evaluations'
-import DashboardAdmin from './pages/DashboardAdmin'
-import NotFound from './pages/NotFound'
-import PrivateRoute from './components/PrivateRoute'
-import AdminRoute from './components/AdminRoute'
-import Notifications from './pages/Notifications'
-import AnnoncesConducteur from './pages/AnnoncesConducteur'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { AuthProvider } from "./hooks/useAuth"
+import Navbar from "./components/Navbar"
+import Footer from "./components/Footer"
+import PrivateRoute from "./components/PrivateRoute"
+import PublicRoute from "./components/PublicRoute"
+import AdminRoute from "./components/AdminRoute"
+
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import DashboardAdmin from "./pages/DashboardAdmin"
+import AnnoncesConducteur from "./pages/AnnoncesConducteur"
+import TrajetsDisponibles from "./pages/TrajetsDisponibles"
+import MesDemandes from "./pages/MesDemandes"
+import MesTrajets from "./pages/MesTrajets"
+import Profile from "./pages/Profile"
+import Evaluations from "./pages/Evaluations"
+import Notifications from "./pages/Notifications"
+import DemandesRecues from "./pages/DemandesRecues"
+import NotFound from "./pages/NotFound"
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <Routes>
-          {/* Routes publiques */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Routes protégées */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<TrajetsDisponibles />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/mes-demandes" element={<MesDemandes />} />
-            <Route path="/mes-trajets" element={<MesTrajets />} />
-            <Route path="/evaluations" element={<Evaluations />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/annonces" element={<AnnoncesConducteur />} />
-            
-            {/* Routes admin */}
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<DashboardAdmin />} />
-            </Route>
-          </Route>
-          
-          {/* Page 404 */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      
-      <Footer />
-    </div>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route 
+                path="/login" 
+                element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                } 
+              />
+              <Route 
+                path="/register" 
+                element={
+                  <PublicRoute>
+                    <Register />
+                  </PublicRoute>
+                } 
+              />
+
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute requiredRole="expediteur">
+                    <TrajetsDisponibles />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <Notifications />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/evaluations"
+                element={
+                  <PrivateRoute>
+                    <Evaluations />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/conducteur/annonces"
+                element={
+                  <PrivateRoute requiredRole="conducteur">
+                    <AnnoncesConducteur />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/conducteur/trajets"
+                element={
+                  <PrivateRoute requiredRole="conducteur">
+                    <MesTrajets />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/demandes-recues"
+                element={
+                  <PrivateRoute requiredRole="conducteur">
+                    <DemandesRecues />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/expediteur/trajets"
+                element={
+                  <PrivateRoute requiredRole="expediteur">
+                    <TrajetsDisponibles />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/expediteur/demandes"
+                element={
+                  <PrivateRoute requiredRole="expediteur">
+                    <MesDemandes />
+                  </PrivateRoute>
+                }
+              />
+
+           
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <AdminRoute>
+                    <DashboardAdmin />
+                  </AdminRoute>
+                }
+              />
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 
